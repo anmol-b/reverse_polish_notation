@@ -5,6 +5,7 @@ public class Expression {
     private int priority;
     private Double value;
     private String expression;
+    private String operator;
 
     public Expression(double value) {
         this.value = value;
@@ -13,12 +14,13 @@ public class Expression {
         }else{
             this.expression =  String.valueOf(value);
         }
-        
-        this.priority = 4;
+        this.operator = "";
+        this.priority = -1;
     }
 
     public Expression(Expression first, Expression second, String operator, int priority)  throws IllegalArgumentException{
         this.value = calculateValue(first.value, second.value, operator);
+        this.operator = operator;
         this.expression = String.format("%s %s %s", first.expression, operator, second.expression);
         this.priority = priority;
     }
@@ -55,6 +57,10 @@ public class Expression {
 
     public void setExpression(String expression) {
         this.expression = expression;
+    }
+
+    public String getOperator() {
+        return operator;
     }
 
     @Override

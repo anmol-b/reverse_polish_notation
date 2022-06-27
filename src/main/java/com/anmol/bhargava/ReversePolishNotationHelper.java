@@ -3,13 +3,13 @@ package com.anmol.bhargava;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.nio.file.FileStore;
 import java.util.Scanner;
 import java.util.Stack;
 
 public class ReversePolishNotationHelper {
     FileReader reader;
     Scanner input;
-    final String operators = "-+/*";
 
     public ReversePolishNotationHelper(File file) throws FileNotFoundException {
         this.reader = new FileReader(file);
@@ -41,13 +41,11 @@ public class ReversePolishNotationHelper {
     private int getPriority(String operator) throws IllegalArgumentException{
         switch(operator){
             case "-":
-                return 0;
             case "+":
-                return 1;
+                return 0;
             case "/":
-                return 2;
             case "*":
-                return 3;
+                return 1;
             default:
                 throw new IllegalArgumentException("Invalid operator");
         }
@@ -59,7 +57,7 @@ public class ReversePolishNotationHelper {
  
         for(int i = 0; i < tokens.length; i++){
             String token = tokens[i];
-        
+
             if (isOperator(token)) {
 
                 if(exp.size() < 2){
@@ -70,14 +68,20 @@ public class ReversePolishNotationHelper {
                 Expression first = exp.pop();
                 
                 int currOperPriority = getPriority(token);
-
-                if (first.getPriority() < currOperPriority || (first.getPriority() != currOperPriority && first.getPriority() < second.getPriority())){
-                    first.setExpression("( " + first.getExpression() + " )");
+                int firstOperPriority = first.getPriority();
+                int secondOperPriority = second.getPriority();
+                // first expression is not a number
+                if (firstOperPriority != -1){ 
+                    // Firsts priority is different than current operator or if its same it is different than either second expression or current token
+                    if (firstOperPriority != currOperPriority || (!second.getOperator().isBlank() && (!first.getOperator().equals(second.getOperator())) || !first.getOperator().equals(token))){
+                        first.setExpression("( " + first.getExpression() + " )");
+                    }
                 }
-                    
- 
-                if (second.getPriority() < currOperPriority  || (second.getPriority() != currOperPriority && second.getPriority() < first.getPriority())){
-                    second.setExpression("( " + second.getExpression() + " )");
+
+                if (secondOperPriority != -1){
+                    if ((secondOperPriority != currOperPriority || (!first.getOperator().isBlank() && (!first.getOperator().equals(second.getOperator()) ) || !second.getOperator().equals(token)))){
+                        second.setExpression("( " + second.getExpression() + " )");
+                    }
                 }
  
                 exp.push(new Expression(first, second, token, currOperPriority));

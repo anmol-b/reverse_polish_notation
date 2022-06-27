@@ -7,7 +7,7 @@ import java.io.File;
  * Assumptions:
  * 1. The program accepts decimal values. Calculation is performed on precision supported by Double class. Output for decimal value is not rounded off or formated.
  * 2. Negative numbers from input are wrapped in parentheses in the output to indicate ptential adjacent operator change while evaluating.
- * 
+ * 3. Input file is a plain text file with each uncommented line as a valid rpn expression that is comma seperated.
  */
 public class ReversePolishNotation {
     public static void main(String[] args){
